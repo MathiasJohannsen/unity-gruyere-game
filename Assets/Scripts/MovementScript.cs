@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class MovementScript : MonoBehaviour
 {
-    public Transform leftHandle;
-    public Transform rightHandle;
+    public Rigidbody leftHandle;
+    public Rigidbody rightHandle;
+    public Rigidbody ball;
     public float handleSpeed = 0.8f;
+    public float forceMultiplier = 100f;
+    public float maxSpeed = 10f;
 
     // Start is called before the first frame update
     void Start()
@@ -15,23 +18,20 @@ public class MovementScript : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        if (Input.GetKey(KeyCode.W))
+        ball.AddForce(Vector3.forward * forceMultiplier);
+
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
         {
-            leftHandle.Translate(Vector3.up * Time.deltaTime * handleSpeed);
+            leftHandle.AddForce(Vector3.up * handleSpeed);
         }
-        if (Input.GetKey(KeyCode.S))
+        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
         {
-            leftHandle.Translate(Vector3.down * Time.deltaTime * handleSpeed);
+            rightHandle.AddForce(Vector3.up * handleSpeed);
         }
-        if (Input.GetKey(KeyCode.UpArrow))
-        {
-            rightHandle.Translate(Vector3.up * Time.deltaTime * handleSpeed);
-        }
-        if (Input.GetKey(KeyCode.DownArrow))
-        {
-            rightHandle.Translate(Vector3.down * Time.deltaTime * handleSpeed);
-        }
+
+        leftHandle.velocity = Vector3.ClampMagnitude(leftHandle.velocity, maxSpeed);
+        rightHandle.velocity = Vector3.ClampMagnitude(rightHandle.velocity, maxSpeed);
     }
 }
